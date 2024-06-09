@@ -31,11 +31,11 @@ void Game::Init()
     // set render-specific controls
     Renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"));
     // load textures
-    ResourceManager::LoadTexture("Textures/planks.png", false, "background");
+    ResourceManager::LoadTexture("Textures/background.jpg", false, "background");
     //ResourceManager::LoadTexture("textures/awesomeface.png", true, "face");
     ResourceManager::LoadTexture("Textures/block.png", false, "block");
     ResourceManager::LoadTexture("Textures/block_solid.png", false, "block_solid");
-    ResourceManager::LoadTexture("textures/paddle.png", true, "paddle");
+    ResourceManager::LoadTexture("Textures/paddle.png", true, "paddle");
     // load levels
     GameLevel one; one.Load("Levels/one.lvl", this->Width, this->Height / 2);
     GameLevel two; two.Load("Levels/two.lvl", this->Width, this->Height / 2);
