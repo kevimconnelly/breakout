@@ -33,8 +33,8 @@ void Game::Init()
     // load textures
     ResourceManager::LoadTexture("Textures/planks.png", false, "background");
     //ResourceManager::LoadTexture("textures/awesomeface.png", true, "face");
-    ResourceManager::LoadTexture("block.png", false, "block");
-    ResourceManager::LoadTexture("block_solid.png", false, "block_solid");
+    ResourceManager::LoadTexture("Textures/block.png", false, "block");
+    ResourceManager::LoadTexture("Textures/block_solid.png", false, "block_solid");
     ResourceManager::LoadTexture("textures/paddle.png", true, "paddle");
     // load levels
     GameLevel one; one.Load("Levels/one.lvl", this->Width, this->Height / 2);
