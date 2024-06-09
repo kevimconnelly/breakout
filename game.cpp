@@ -26,9 +26,7 @@ void Game::Init()
     ResourceManager::GetShader("sprite").SetMatrix4("projection", projection);
 
     //set render specific contros
-    Shader myShader;
-    myShader = ResourceManager::GetShader("sprite");
-    Renderer = new SpriteRenderer(myShader);
+    Renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"));
 
     //load textures
     ResourceManager::LoadTexture("Textures/planks.png", true, "planks");
@@ -46,8 +44,5 @@ void Game::ProcessInput(float dt)
 
 void Game::Render()
 {
-    Texture2D myTexture;
-    myTexture = ResourceManager::GetTexture("planks");
-    Renderer->DrawSprite(myTexture, glm::vec2(200, 200), glm::vec2(300, 400), 45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-
+    Renderer->DrawSprite(ResourceManager::GetTexture("planks"), glm::vec2(200, 200), glm::vec2(300, 400), 45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 }
