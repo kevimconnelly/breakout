@@ -19,6 +19,9 @@
     <Filter Include="Resource Files\Textures">
       <UniqueIdentifier>{52650792-4670-4b54-aa46-4375c82f09fc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Levels">
+      <UniqueIdentifier>{549592c3-16b8-429f-8678-a9223a1d1869}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource_manager.h">
@@ -34,6 +37,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sprite_renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game_object.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game_level.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -59,6 +68,12 @@
     <ClCompile Include="sprite_renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="game_object.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game_level.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="sprite.vert">
@@ -67,9 +82,27 @@
     <None Include="sprite.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="Levels\one.lvl">
+      <Filter>Resource Files\Levels</Filter>
+    </None>
+    <None Include="Levels\two.lvl">
+      <Filter>Resource Files\Levels</Filter>
+    </None>
+    <None Include="Levels\three.lvl">
+      <Filter>Resource Files\Levels</Filter>
+    </None>
+    <None Include="Levels\four.lvl">
+      <Filter>Resource Files\Levels</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\OpenGL\Textures\planks.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="Textures\block.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="Textures\block_solid.png">
       <Filter>Resource Files\Textures</Filter>
     </Image>
   </ItemGroup>
