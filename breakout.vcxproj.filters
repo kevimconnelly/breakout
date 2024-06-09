@@ -82,16 +82,16 @@
     <None Include="sprite.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="Levels\one.lvl">
+    <None Include="Levels\four.lvl">
       <Filter>Resource Files\Levels</Filter>
     </None>
-    <None Include="Levels\two.lvl">
+    <None Include="Levels\one.lvl">
       <Filter>Resource Files\Levels</Filter>
     </None>
     <None Include="Levels\three.lvl">
       <Filter>Resource Files\Levels</Filter>
     </None>
-    <None Include="Levels\four.lvl">
+    <None Include="Levels\two.lvl">
       <Filter>Resource Files\Levels</Filter>
     </None>
   </ItemGroup>
