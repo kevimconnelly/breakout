@@ -21,6 +21,33 @@ Game::~Game()
     delete Player;
 }
 
+void Game::ResetLevel()
+{
+    if (this->Level == 0)
+        this->Levels[0].Load("Levels/one.lvl", this->Width, this->Height / 2);
+    else if (this->Level == 1)
+        this->Levels[1].Load("Levels/two.lvl", this->Width, this->Height / 2);
+    else if (this->Level == 2)
+        this->Levels[2].Load("Levels/three.lvl", this->Width, this->Height / 2);
+    else if (this->Level == 3)
+        this->Levels[3].Load("Levels/four.lvl", this->Width, this->Height / 2);
+
+    this->Lives = 3;
+}
+
+void Game::ResetPlayer()
+{
+    // reset player/ball stats
+    Player->Size = PLAYER_SIZE;
+    Player->Position = glm::vec2(this->Width / 2.0f - PLAYER_SIZE.x / 2.0f, this->Height - PLAYER_SIZE.y);
+    Ball->Reset(Player->Position + glm::vec2(PLAYER_SIZE.x / 2.0f - BALL_RADIUS, -(BALL_RADIUS * 2.0f)), INITIAL_BALL_VELOCITY);
+    // also disable all active powerups
+    //Effects->Chaos = Effects->Confuse = false;
+    //Ball->PassThrough = Ball->Sticky = false;
+    Player->Color = glm::vec3(1.0f);
+    Ball->Color = glm::vec3(1.0f);
+}
+
 void Game::Init()
 {
     // load shaders
@@ -63,6 +90,12 @@ void Game::Update(float dt)
     Ball->Move(dt, this->Width);
 
     this->DoCollisions();
+
+    if (Ball->Position.y >= this->Height)
+    {
+        this->ResetLevel();
+        this->ResetPlayer();
+    }
 }
 
 void Game::ProcessInput(float dt)
@@ -109,6 +142,8 @@ void Game::Render()
 }
 
 bool CheckCollision(GameObject& one, GameObject& two);
+Collision CheckCollision(BallObject& one, GameObject& two);
+Direction VectorDirection(glm::vec2 closest);
 
 void Game::DoCollisions()
 {
@@ -116,12 +151,52 @@ void Game::DoCollisions()
     {
         if (!box.Destroyed)
         {
-            if (CheckCollision(*Ball, box))
+            Collision collision = CheckCollision(*Ball, box);
+            if (std::get<0>(collision)) // if collision is true
             {
+                // destroy block if not solid
                 if (!box.IsSolid)
                     box.Destroyed = true;
+                // collision resolution
+                Direction dir = std::get<1>(collision);
+                glm::vec2 diff_vector = std::get<2>(collision);
+                if (dir == LEFT || dir == RIGHT) // horizontal collision
+                {
+                    Ball->Velocity.x = -Ball->Velocity.x; // reverse horizontal velocity
+                    // relocate
+                    float penetration = Ball->Radius - std::abs(diff_vector.x);
+                    if (dir == LEFT)
+                        Ball->Position.x += penetration; // move ball to right
+                    else
+                        Ball->Position.x -= penetration; // move ball to left;
+                }
+                else // vertical collision
+                {
+                    Ball->Velocity.y = -Ball->Velocity.y; // reverse vertical velocity
+                    // relocate
+                    float penetration = Ball->Radius - std::abs(diff_vector.y);
+                    if (dir == UP)
+                        Ball->Position.y -= penetration; // move ball back up
+                    else
+                        Ball->Position.y += penetration; // move ball back down
+                }
             }
         }
+    }
+
+    Collision result = CheckCollision(*Ball, *Player);
+    if (!Ball->Stuck && std::get<0>(result))
+    {
+        // check where it hit the board, and change velocity based on where it hit the board
+        float centerBoard = Player->Position.x + Player->Size.x / 2.0f;
+        float distance = (Ball->Position.x + Ball->Radius) - centerBoard;
+        float percentage = distance / (Player->Size.x / 2.0f);
+        // then move accordingly
+        float strength = 2.0f;
+        glm::vec2 oldVelocity = Ball->Velocity;
+        Ball->Velocity.x = INITIAL_BALL_VELOCITY.x * percentage * strength;
+        Ball->Velocity.y = -Ball->Velocity.y;
+        Ball->Velocity = glm::normalize(Ball->Velocity) * glm::length(oldVelocity);
     }
 }
 
@@ -137,7 +212,7 @@ bool CheckCollision(GameObject& one, GameObject& two) // AABB - AABB collision
     return collisionX && collisionY;
 }
 
-bool CheckCollision(BallObject& one, GameObject& two) // AABB - Circle collision
+Collision CheckCollision(BallObject& one, GameObject& two) // AABB - Circle collision
 {
     // get center point circle first 
     glm::vec2 center(one.Position + one.Radius);
@@ -154,7 +229,10 @@ bool CheckCollision(BallObject& one, GameObject& two) // AABB - Circle collision
     glm::vec2 closest = aabb_center + clamped;
     // retrieve vector between center circle and closest point AABB and check if length <= radius
     difference = closest - center;
-    return glm::length(difference) < one.Radius;
+    if (glm::length(difference) <= one.Radius)
+        return std::make_tuple(true, VectorDirection(difference), difference);
+    else
+        return std::make_tuple(false, UP, glm::vec2(0.0f, 0.0f));
 }
 
 // calculates which direction a vector is facing (N,E,S or W)

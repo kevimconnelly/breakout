@@ -13,6 +13,15 @@ enum GameState {
     GAME_WIN
 };
 
+enum Direction {
+    UP,
+    RIGHT,
+    DOWN,
+    LEFT
+};
+
+typedef std::tuple<bool, Direction, glm::vec2> Collision; // <collision?, what direction?, difference vector center - closest point>
+
 // Initial size of the player paddle
 const glm::vec2 PLAYER_SIZE(100.0f, 20.0f);
 // Initial velocity of the player paddle
@@ -35,6 +44,7 @@ public:
     unsigned int            Width, Height;
     std::vector<GameLevel>  Levels;
     unsigned int            Level;
+    unsigned int            Lives;
     // constructor/destructor
     Game(unsigned int width, unsigned int height);
     ~Game();
@@ -45,6 +55,8 @@ public:
     void Update(float dt);
     void Render();
     void DoCollisions();
+    void ResetLevel();
+    void ResetPlayer();
 };
 
 #endif
