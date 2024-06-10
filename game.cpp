@@ -57,6 +57,7 @@ void Game::Init()
     // load shaders
     ResourceManager::LoadShader("sprite.vert", "sprite.frag", nullptr, "sprite");
     ResourceManager::LoadShader("particle.vs", "particle.fs", nullptr, "particle");
+    ResourceManager::LoadShader("post_processing.vs", "post_processing.fs", nullptr, "postprocessing");
     // configure shaders
     glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(this->Width),
         static_cast<float>(this->Height), 0.0f, -1.0f, 1.0f);
@@ -95,6 +96,7 @@ void Game::Init()
         ResourceManager::GetTexture("particle"),
         500
     );
+    Effects = new PostProcessor(ResourceManager::GetShader("postprocessing"), this->Width, this->Height);
 }
 
 void Game::Update(float dt)
