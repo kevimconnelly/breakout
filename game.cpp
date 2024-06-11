@@ -13,6 +13,8 @@ BallObject* Ball;
 ParticleGenerator* Particles;
 PostProcessor *Effects;
 
+float ShakeTime = 0.0f;
+
 Game::Game(unsigned int width, unsigned int height)
     : State(GAME_ACTIVE), Keys(), Width(width), Height(height)
 {
@@ -111,6 +113,12 @@ void Game::Update(float dt)
         this->ResetLevel();
         this->ResetPlayer();
     }
+    if (ShakeTime > 0.0f)
+    {
+        ShakeTime -= dt;
+        if (ShakeTime <= 0.0f)
+            Effects->Shake = false;
+    }
 }
 
 void Game::ProcessInput(float dt)
@@ -176,6 +184,11 @@ void Game::DoCollisions()
                 // destroy block if not solid
                 if (!box.IsSolid)
                     box.Destroyed = true;
+                else
+                {   // if block is solid, enable shake effect
+                    ShakeTime = 0.05f;
+                    Effects->Shake = true;
+                }
                 // collision resolution
                 Direction dir = std::get<1>(collision);
                 glm::vec2 diff_vector = std::get<2>(collision);
